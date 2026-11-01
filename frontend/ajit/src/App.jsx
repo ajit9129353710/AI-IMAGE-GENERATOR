@@ -58,7 +58,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/generate",
+        "`${import.meta.env.VITE_API_URL}/api/generate`",
         {
           method: "POST",
           headers: {
