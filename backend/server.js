@@ -7,15 +7,23 @@ const axios = require("axios");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(
-cors({
-origin: process.env.CLIENT_URL || "http://localhost:5173",
-})
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ajit-7pib.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+}));
 
 app.use(express.json({ limit: "1mb" }));
 
-// Health check
 app.get("/", (req, res) => {
 res.json({
 success: true,
@@ -23,7 +31,6 @@ message: "PixelForge AI Studio backend is running!",
 });
 });
 
-// Check configuration without exposing the API key
 app.get("/api/status", (req, res) => {
 res.json({
 success: true,
